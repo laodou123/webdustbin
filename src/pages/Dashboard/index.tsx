@@ -24,7 +24,7 @@ const dustbinTypes = [
   { key: "plasticStatus", name: "Plastic" },
   { key: "metalStatus", name: "Metal" },
   { key: "paperStatus", name: "Paper" },
-  { key: "glassStatus", name: "Glass" },
+  { key: "ewasteStatus", name: "Ewaste" },
   { key: "generalwasteStatus", name: "General Waste" },
 ];
 
@@ -32,7 +32,7 @@ const initDustbinData: Dustbin[] = [
   { name: 'Plastic', fullness: 0, lastUpdated: '2024-01-18 13:45', color: '#818CF8',history: [], id: 0, notified: false },
   { name: 'Metal', fullness: 0, lastUpdated: '2024-01-18 13:45', color: '#FCD34D',history: [], id: 1, notified: false },
   { name: 'Paper', fullness: 0, lastUpdated: '2024-01-18 13:45', color: '#6EE7B7',history: [], id: 2, notified: false },
-  { name: 'Glass', fullness: 0, lastUpdated: '2024-01-18 13:45', color: '#F472B6',history: [], id: 3, notified: false },
+  { name: 'Ewaste', fullness: 0, lastUpdated: '2024-01-18 13:45', color: '#F472B6',history: [], id: 3, notified: false },
   { name: 'General Waste', fullness: 8, lastUpdated: '2024-01-18 13:45', color: '#93C5FD',history: [], id: 5, notified: false }
 ];
 
@@ -179,7 +179,7 @@ export default function Dashboard() {
       const listener = onValue(
         dustbinQuery,
         (snapshot) => {
-          const obj = snapshot.val();
+          const obj = snapshot.val() || {};
           const data: any = Object.values(obj)?.[0];
           if (data) {
             const binCapacity = data.binCapacity;

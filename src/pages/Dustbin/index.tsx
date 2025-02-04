@@ -6,7 +6,7 @@ const bins = [
   { title: "Paper", imageSrc: '/images/paper.png' },
   { title: "Metal", imageSrc: '/images/metal.png' },
   { title: "GeneralWaste", imageSrc: '/images/generalwaste.jpg' },
-  { title: "Glass", imageSrc: '/images/glass.png' }, // Newly added glass bin
+  { title: "EWaste", imageSrc: '/images/ewaste.png' }
 ];
 
 const Dustbin = () => {
