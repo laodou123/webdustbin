@@ -1,14 +1,22 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/Card';
-import { Badge, Breadcrumb, message as aMessage, Switch } from 'antd';
-import { Link, useParams } from 'react-router-dom';
-import { ArrowUpDown, Clock, Lock, MapPin, Scale, Trash2, Signal } from 'lucide-react';
-import HistoryData from './HistoryData';
-import LogData from './LogData';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/Card";
+import { Badge, Breadcrumb, message as aMessage, Switch } from "antd";
+import { Link, useParams } from "react-router-dom";
+import {
+  ArrowUpDown,
+  Clock,
+  Lock,
+  MapPin,
+  Scale,
+  Trash2,
+  Signal,
+} from "lucide-react";
+import HistoryData from "./HistoryData";
+import LogData from "./LogData";
 import { ref, onValue, onChildAdded } from "firebase/database";
-import { useEffect, useMemo, useRef, useState } from 'react';
-import mqtt, { MqttClient } from 'mqtt';
-import { MQTT_OPTIONS } from '@/utils/config';
-import { database } from '@/utils/firebase';
+import { useEffect, useMemo, useRef, useState } from "react";
+import mqtt, { MqttClient } from "mqtt";
+import { MQTT_OPTIONS } from "@/utils/config";
+import { database } from "@/utils/firebase";
 
 interface SensorData {
   binCapacity: number;
@@ -28,25 +36,25 @@ const defaultState = {
 
 const TITLE_OBJ = {
   plastic: {
-    title: 'Plastic Bin',
-    desc: 'This is a plastic bin used for recycling plastic waste.'
+    title: "Plastic Bin",
+    desc: "This is a plastic bin used for recycling plastic waste.",
   },
   paper: {
-    title: 'Paper Bin',
-    desc: 'This is a paper bin used for recycling paper waste.'
+    title: "Paper Bin",
+    desc: "This is a paper bin used for recycling paper waste.",
   },
   metal: {
-    title: 'Metal Bin',
-    desc: 'This is a metal bin used for recycling metal waste.'
+    title: "Metal Bin",
+    desc: "This is a metal bin used for recycling metal waste.",
   },
   generalwaste: {
-    title: 'General Waste Bin',
-    desc: 'This is a general waste bin used for recycling general waste.'
+    title: "General Waste Bin",
+    desc: "This is a general waste bin used for recycling general waste.",
   },
   ewaste: {
-    title: 'Ewaste Bin',
-    desc: 'This is an ewaste bin used for recycling ewaste waste.'
-  }
+    title: "Ewaste Bin",
+    desc: "This is an ewaste bin used for recycling ewaste waste.",
+  },
 };
 
 const DustbinDetailPage = () => {
@@ -70,7 +78,7 @@ const DustbinDetailPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const binTypeLower = type ? type.toLowerCase() : '';
+  const binTypeLower = type ? type.toLowerCase() : "";
 
   const dataTopic = binTypeLower
     ? `srb/${binTypeLower}/eabc24b6-ca1c-4c94-86e1-2ebbc4952a78`
@@ -216,9 +224,7 @@ const DustbinDetailPage = () => {
 
             // Show a snackbar notification
             aMessage.destroy();
-            aMessage.info(
-              `Added ${weightInGrams}g to the ${material} bin.`
-            );
+            aMessage.info(`Added ${weightInGrams}g to the ${material} bin.`);
           }
         } else {
           console.warn("Thrown data is missing 'material' or 'weightInGrams'.");
@@ -234,7 +240,7 @@ const DustbinDetailPage = () => {
 
   useEffect(() => {
     if (!dataTopic) {
-      console.error('Invalid bin type');
+      console.error("Invalid bin type");
     }
 
     const client = mqtt.connect(MQTT_OPTIONS as any);
@@ -337,7 +343,6 @@ const DustbinDetailPage = () => {
         });
       }
     };
-
   }, [dataTopic]);
 
   useEffect(() => {
@@ -368,7 +373,7 @@ const DustbinDetailPage = () => {
   const generateMainContent = () => {
     if (!isConnected) {
       return (
-        <div className='flex flex-1 items-center justify-center h-48 text-gray-500'>
+        <div className="flex flex-1 items-center justify-center h-48 text-gray-500">
           Connecting to the MQTT broker...
         </div>
       );
@@ -385,7 +390,7 @@ const DustbinDetailPage = () => {
           sensorData={sensorData}
           handleChange={handleSwitchChange}
         />
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <HistoryData dataSource={historicalData} />
           <LogData dataSource={messageLog} />
         </div>
@@ -393,65 +398,61 @@ const DustbinDetailPage = () => {
     );
   };
 
-
   return (
-    <div className='flex flex-col p-3 flex-1 gap-2 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50'>
-      <header
-      >
+    <div className="flex flex-col p-3 flex-1 gap-2 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      <header>
         <Breadcrumb
           items={[
             {
-              title: (
-                <Link to='/dustbin'>
-                  Dustbin
-                </Link>
-              )
+              title: <Link to="/dustbin">Dustbin</Link>,
             },
             {
-              title: type
-            }
+              title: type,
+            },
           ]}
         />
       </header>
-      <div className='flex-1 flex flex-col gap-4 p-2 rounded-md shadow-md overflow-y-auto'>
+      <div className="flex-1 flex flex-col gap-4 p-2 rounded-md shadow-md overflow-y-auto">
         <Card className="space-y-2 py-4 px-3">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-transparent bg-clip-text">
-            {displayInfo?.title || 'Bin'}
+            {displayInfo?.title || "Bin"}
           </h1>
-          <p className="text-gray-600">
-            {displayInfo?.desc}
-          </p>
+          <p className="text-gray-600">{displayInfo?.desc}</p>
         </Card>
         {generateMainContent()}
       </div>
     </div>
-  )
+  );
 };
 
 const ConnectionInfoCard = ({ broker, dataTopic, isConnected }: any) => {
   return (
     <Card className="border-t-4 border-t-green-500 shadow-lg shadow-green-100">
-      <CardHeader className='flex flex-col space-y-1.5 p-6'>
+      <CardHeader className="flex flex-col space-y-1.5 p-6">
         <div className="flex flex-col gap-1 md:gap-0 md:flex-row items-start md:items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Signal className="h-5 w-5 text-green-500" />
             MQTT Connection Info
           </CardTitle>
           <Badge
-            status={isConnected ? 'success' : 'error'}
-            text={isConnected ? 'Connected' : 'Disconnected'}
+            status={isConnected ? "success" : "error"}
+            text={isConnected ? "Connected" : "Disconnected"}
           />
         </div>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="grid md:grid-cols-2 gap-4">
-          <div className='flex flex-col gap-1'>
+          <div className="flex flex-col gap-1">
             <p className="text-sm font-medium text-gray-500">Broker</p>
-            <p className="flex-1 text-sm font-mono break-all bg-purple-50 p-2 rounded">{broker}</p>
+            <p className="flex-1 text-sm font-mono break-all bg-purple-50 p-2 rounded">
+              {broker}
+            </p>
           </div>
-          <div className='flex flex-col gap-1'>
+          <div className="flex flex-col gap-1">
             <p className="text-sm font-medium text-gray-500">Data Topic</p>
-            <p className="flex-1 text-sm font-mono break-all bg-blue-50 p-2 rounded">{dataTopic}</p>
+            <p className="flex-1 text-sm font-mono break-all bg-blue-50 p-2 rounded">
+              {dataTopic}
+            </p>
           </div>
         </div>
       </CardContent>
@@ -482,16 +483,14 @@ const LiveSensorDataCard = ({ sensorData, handleChange }: any) => {
   return (
     <Card className="border-t-4 border-t-blue-500 shadow-lg shadow-blue-100">
       <CardHeader>
-        <CardTitle
-          className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 flex flex-col items-start gap-1 md:gap-0 md:flex-row md:items-center justify-between"
-        >
-          <span>
-            Live Sensor Data
-          </span>
-          <span className='flex items-center gap-2'>
+        <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 flex flex-col items-start gap-1 md:gap-0 md:flex-row md:items-center justify-between">
+          <span>Live Sensor Data</span>
+          <span className="flex items-center gap-2">
             <Clock className="h-5 w-5 text-indigo-500" />
             <span className="text-base text-indigo-600">
-              {sensorData?.timestamp ? new Date(sensorData.timestamp).toLocaleString() : 'N/A'}
+              {sensorData?.timestamp
+                ? new Date(sensorData.timestamp).toLocaleString()
+                : "N/A"}
             </span>
           </span>
         </CardTitle>
@@ -507,19 +506,18 @@ const LiveSensorDataCard = ({ sensorData, handleChange }: any) => {
               </div>
               <Switch
                 className="data-[state=checked]:bg-orange-500"
-                checked={coverState === 'open'}
+                checked={coverState === "open"}
                 onChange={(e) => {
-                  const newState = e ? 'open' : 'close';
+                  const newState = e ? "open" : "close";
                   setCoverState(newState);
-                  handleChange(newState)
+                  handleChange(newState);
                 }}
               />
             </div>
             <p className="text-2xl font-bold text-orange-600">
-              {sensorData?.cover || 'N/A'}
+              {sensorData?.cover || "N/A"}
             </p>
           </div>
-
           {/* Bin Capacity */}
           <div className="space-y-2 bg-blue-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
@@ -532,6 +530,7 @@ const LiveSensorDataCard = ({ sensorData, handleChange }: any) => {
           </div>
 
           {/* Lock */}
+          {/*
           <div className="space-y-2 bg-purple-50 p-4 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -539,11 +538,11 @@ const LiveSensorDataCard = ({ sensorData, handleChange }: any) => {
                 <span className="text-sm font-medium">Lock</span>
               </div>
               <Switch
-                checked={lockState === 'unlock'}
+                checked={lockState === "unlock"}
                 onChange={(e) => {
-                  const newState = e ? 'unlock' : 'lock';
+                  const newState = e ? "unlock" : "lock";
                   setLockState(newState);
-                  handleChange(newState)
+                  handleChange(newState);
                 }}
               />
             </div>
@@ -551,20 +550,20 @@ const LiveSensorDataCard = ({ sensorData, handleChange }: any) => {
               {sensorData?.lock || "N/A"}
             </p>
           </div>
-
+          */}
           {/* Position */}
           <div className="space-y-2 bg-pink-50 p-4 rounded-lg">
-            <div className='flex items-center justify-between'>
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-pink-500" />
                 <span className="text-sm font-medium">Position</span>
               </div>
               <Switch
-                checked={positionState === 'up'}
+                checked={positionState === "up"}
                 onChange={(e) => {
-                  const newState = e ? 'up' : 'down';
+                  const newState = e ? "up" : "down";
                   setPositionState(newState);
-                  handleChange(newState)
+                  handleChange(newState);
                 }}
               />
             </div>
@@ -572,21 +571,18 @@ const LiveSensorDataCard = ({ sensorData, handleChange }: any) => {
               {sensorData?.upDn || "N/A"}
             </p>
           </div>
-
           {/* Weight */}
-          {
-            sensorData?.weightInGrams && (
-              <div className="space-y-2 bg-emerald-50 p-4 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <Scale className="h-5 w-5 text-emerald-500" />
-                  <span className="text-sm font-medium">Weight</span>
-                </div>
-                <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600">
-                  {sensorData.weightInGrams} grams
-                </p>
+          {sensorData?.weightInGrams && (
+            <div className="space-y-2 bg-emerald-50 p-4 rounded-lg">
+              <div className="flex items-center gap-2">
+                <Scale className="h-5 w-5 text-emerald-500" />
+                <span className="text-sm font-medium">Weight</span>
               </div>
-            )
-          }
+              <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600">
+                {sensorData.weightInGrams} grams
+              </p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
