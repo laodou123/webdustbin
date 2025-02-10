@@ -392,7 +392,6 @@ const DustbinDetailPage = () => {
         />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <HistoryData dataSource={historicalData} />
-          <LogData dataSource={messageLog} />
         </div>
       </>
     );
