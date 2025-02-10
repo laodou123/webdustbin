@@ -529,7 +529,7 @@ const LiveSensorDataCard = ({ sensorData, handleChange }: any) => {
           </div>
 
           {/* Lock */}
-
+          {/*}
           <div className="space-y-2 bg-purple-50 p-4 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
